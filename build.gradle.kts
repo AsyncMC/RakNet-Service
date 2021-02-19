@@ -1,17 +1,18 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
+val kotlinVersion = "1.4.21"
 plugins {
-    kotlin("jvm") version "1.3.72"
+    kotlin("jvm") version "1.4.21"
     jacoco
     `maven-publish`
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_13
-    targetCompatibility = JavaVersion.VERSION_13
+    sourceCompatibility = JavaVersion.VERSION_15
+    targetCompatibility = JavaVersion.VERSION_15
 }
 
-val moduleName = "com.github.asyncmc.template.internal"
+val moduleName = "com.github.asyncmc.protocol.raknet.api"
 val isSnapshot = version.toString().endsWith("SNAPSHOT")
 
 repositories {
@@ -27,7 +28,7 @@ tasks.withType<JavaCompile>().configureEach {
 }
 
 tasks.withType<KotlinCompile>().configureEach {
-    kotlinOptions.jvmTarget = "13"
+    kotlinOptions.jvmTarget = "15"
     kotlinOptions.freeCompilerArgs += "-Xopt-in=kotlin.RequiresOptIn"
 }
 
@@ -55,10 +56,14 @@ plugins.withType<JavaPlugin>().configureEach {
 }
 
 dependencies {
-    api(kotlin("stdlib-jdk8", embeddedKotlinVersion))
-    api(kotlin("reflect", embeddedKotlinVersion))
+    api(kotlin("stdlib-jdk8", kotlinVersion))
+    api(kotlin("reflect", kotlinVersion))
+    api("io.ktor:ktor-io:1.4.1")
 
-    testImplementation(kotlin("test-junit5", embeddedKotlinVersion))
+    testImplementation(kotlin("test-junit5", kotlinVersion))
+    
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.4.2")
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.0-M1")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.0-M1")
